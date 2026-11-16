@@ -1,78 +1,34 @@
-# Alpha-Beta Pruning Algorithm
-
-def alpha_beta(node, depth, alpha, beta, maximizing):
-
-    # Check Leaf Node
-    if isinstance(node, int):
-        print("Leaf Node:", node)
-        return node
-
-    # MAX Player
-    if maximizing:
-
+def minimax(depth, index, is_max, values, alpha, beta):
+    # Base condition: leaf node
+    if depth == 3:
+        return values[index]
+        
+    if is_max:
         best = float('-inf')
-
-        for child in node:
-
-            value = alpha_beta(
-                child, depth + 1,
-                alpha, beta, False
-            )
-
+        for i in range(2):
+            value = minimax(depth + 1, index * 2 + i, False, values, alpha, beta)
             best = max(best, value)
             alpha = max(alpha, best)
-
-            print("MAX: Alpha =", alpha, "Beta =", beta)
-
-            # Pruning Condition
+            # Pruning condition
             if alpha >= beta:
-                print("Branch Pruned at MAX!")
                 break
-
         return best
-
-    # MIN Player
     else:
-
         best = float('inf')
-
-        for child in node:
-
-            value = alpha_beta(
-                child, depth + 1,
-                alpha, beta, True
-            )
-
+        for i in range(2):
+            value = minimax(depth + 1, index * 2 + i, True, values, alpha, beta)
             best = min(best, value)
             beta = min(beta, best)
-
-            print("MIN: Alpha =", alpha, "Beta =", beta)
-
-            # Pruning Condition
+            # Pruning condition
             if alpha >= beta:
-                print("Branch Pruned at MIN!")
                 break
-
         return best
 
-
-# Main Program
-
-tree = [
-    [[3, 5], [6, 9]],
-    [[1, 2], [0, -1]]
-]
-
-print("Alpha-Beta Pruning Algorithm")
-print("----------------------------")
-
-result = alpha_beta(
-    tree,
-    0,
-    float('-inf'),
-    float('inf'),
-    True
-)
-
-print("----------------------------")
-print("Optimal Value:", result)
+# Leaf node values
+values = [3, 5, 6, 9, 1, 2, 0, -1]
+# Initial values
+alpha = float('-inf')
+beta = float('inf')
+# Find optimal value
+result = minimax(0, 0, True, values, alpha, beta)
+print("Optimal value:", result)
